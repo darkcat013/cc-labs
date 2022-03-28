@@ -1,9 +1,11 @@
 ﻿using lab4;
 
-string path = "../../../graph.txt";
+string path = "../../../graph1.txt";
 Graph graph = new(path);
 
-if(graph.BFS("5"))
+graph.BFS(0.ToString());
+
+if(graph.BFS("13"))
 {
     Console.WriteLine("Found");
 }
@@ -11,7 +13,7 @@ else
 {
     Console.WriteLine("Not found");
 }
-if (graph.DFS("5"))
+if (graph.DFS("13"))
 {
     Console.WriteLine("Found");
 }

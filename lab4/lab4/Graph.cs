@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,13 +36,10 @@ namespace lab4
 
         public bool BFS(string toFind)
         {
-            if(toFind.Equals(FirstVertice))
-            {
-                Console.Write($"{toFind} ");
-                return true;
-            }
+            Stopwatch stopwatch = new();
 
-            Dictionary<string, bool> visited = new Dictionary<string, bool>();
+            stopwatch.Start();
+            Dictionary<string, bool> visited = new();
 
             Queue<string> nextVertices = new();
             nextVertices.Enqueue(FirstVertice);
@@ -49,45 +47,14 @@ namespace lab4
             while(nextVertices.Count > 0)
             {
                 string current = nextVertices.Dequeue();
-                if(!visited.ContainsKey(current))
+                if (toFind.Equals(current))
                 {
-                    visited.Add(current, true);
                     Console.Write($"{current} ");
+                    stopwatch.Stop();
+                    Console.WriteLine();
+                    Console.WriteLine($"{(stopwatch.Elapsed.Minutes * 60000) + (stopwatch.Elapsed.Seconds * 1000) + stopwatch.Elapsed.Milliseconds}");
+                    return true;
                 }
-
-                foreach (string vertice in Vertices[current])
-                {
-                    if (toFind.Equals(vertice))
-                    {
-                        Console.Write($"{vertice} ");
-                        return true;
-                    }
-                    else if(!visited.ContainsKey(vertice))
-                    {
-                        nextVertices.Enqueue(vertice);
-                    }
-                }
-            }
-            Console.WriteLine();
-            return false;
-        }
-
-        public bool DFS(string toFind)
-        {
-            if (toFind.Equals(FirstVertice))
-            {
-                Console.Write($"{toFind} ");
-                return true;
-            }
-
-            Dictionary<string, bool> visited = new Dictionary<string, bool>();
-
-            Stack<string> nextVertices = new();
-            nextVertices.Push(FirstVertice);
-
-            while (nextVertices.Count > 0)
-            {
-                string current = nextVertices.Pop();
                 if (!visited.ContainsKey(current))
                 {
                     visited.Add(current, true);
@@ -96,18 +63,57 @@ namespace lab4
 
                 foreach (string vertice in Vertices[current])
                 {
-                    if (toFind.Equals(vertice))
+                    if(!visited.ContainsKey(vertice))
                     {
-                        Console.Write($"{vertice} ");
-                        return true;
+                        nextVertices.Enqueue(vertice);
                     }
-                    else if (!visited.ContainsKey(vertice))
+                }
+            }
+            stopwatch.Stop();
+            Console.WriteLine();
+            Console.WriteLine($"{(stopwatch.Elapsed.Minutes * 60000) + (stopwatch.Elapsed.Seconds * 1000) + stopwatch.Elapsed.Milliseconds}");
+            return false;
+        }
+
+        public bool DFS(string toFind)
+        {
+            Stopwatch stopwatch = new();
+
+            stopwatch.Start();
+
+            Dictionary<string, bool> visited = new();
+
+            Stack<string> nextVertices = new();
+            nextVertices.Push(FirstVertice);
+
+            while (nextVertices.Count > 0)
+            {
+                string current = nextVertices.Pop();
+                if (toFind.Equals(current))
+                {
+                    Console.Write($"{current} ");
+                    stopwatch.Stop();
+                    Console.WriteLine();
+                    Console.WriteLine($"{(stopwatch.Elapsed.Minutes * 60000) + (stopwatch.Elapsed.Seconds * 1000) + stopwatch.Elapsed.Milliseconds}");
+                    return true;
+                }
+                if (!visited.ContainsKey(current))
+                {
+                    visited.Add(current, true);
+                    Console.Write($"{current} ");
+                }
+
+                foreach (string vertice in Vertices[current])
+                {
+                    if (!visited.ContainsKey(vertice))
                     {
                         nextVertices.Push(vertice);
                     }
                 }
             }
+            stopwatch.Stop();
             Console.WriteLine();
+            Console.WriteLine($"{(stopwatch.Elapsed.Minutes * 60000) + (stopwatch.Elapsed.Seconds * 1000) + stopwatch.Elapsed.Milliseconds}");
             return false;
         }
     }
