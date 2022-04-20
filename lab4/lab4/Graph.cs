@@ -13,8 +13,12 @@ namespace lab4
         public int VerticesCount => Vertices.Count;
         public int EdgeCount { get; set; }
         public string FirstVertice => Vertices.Keys.FirstOrDefault() ?? "";
-        public Graph(string filePath)
+        public string TimePath { get; set; }
+        public string OutputPath { get; set; }
+        public Graph(string filePath, string timePath, string outputPath)
         {
+            TimePath = timePath;
+            OutputPath = outputPath;
             Vertices = new Dictionary<string, List<string>>();
             IEnumerable<string[]> edges = File.ReadAllLines(filePath).Select(x => x.Split(' '));
             foreach(string[] edge in edges)
@@ -33,7 +37,7 @@ namespace lab4
             }
             
         }
-
+        public string GetTime(Stopwatch stopwatch) => ((stopwatch.Elapsed.Minutes * 60000) + (stopwatch.Elapsed.Seconds * 1000) + stopwatch.Elapsed.Milliseconds).ToString() + "\n";
         public bool BFS(string toFind)
         {
             Stopwatch stopwatch = new();
@@ -44,21 +48,22 @@ namespace lab4
             Queue<string> nextVertices = new();
             nextVertices.Enqueue(FirstVertice);
 
+            string nodesPath = "";
             while(nextVertices.Count > 0)
             {
                 string current = nextVertices.Dequeue();
                 if (toFind.Equals(current))
                 {
-                    Console.Write($"{current} ");
+                    nodesPath += $"{current}\n";
                     stopwatch.Stop();
-                    Console.WriteLine();
-                    Console.WriteLine($"{(stopwatch.Elapsed.Minutes * 60000) + (stopwatch.Elapsed.Seconds * 1000) + stopwatch.Elapsed.Milliseconds}");
+                    File.AppendAllText(TimePath, GetTime(stopwatch));
+                    File.AppendAllText(OutputPath, nodesPath);
                     return true;
                 }
                 if (!visited.ContainsKey(current))
                 {
                     visited.Add(current, true);
-                    Console.Write($"{current} ");
+                    nodesPath += $"{current} ";
                 }
 
                 foreach (string vertice in Vertices[current])
@@ -70,8 +75,8 @@ namespace lab4
                 }
             }
             stopwatch.Stop();
-            Console.WriteLine();
-            Console.WriteLine($"{(stopwatch.Elapsed.Minutes * 60000) + (stopwatch.Elapsed.Seconds * 1000) + stopwatch.Elapsed.Milliseconds}");
+            File.AppendAllText(TimePath, GetTime(stopwatch));
+            File.AppendAllText(OutputPath, nodesPath);
             return false;
         }
 
@@ -86,21 +91,22 @@ namespace lab4
             Stack<string> nextVertices = new();
             nextVertices.Push(FirstVertice);
 
+            string nodesPath = "";
             while (nextVertices.Count > 0)
             {
                 string current = nextVertices.Pop();
                 if (toFind.Equals(current))
                 {
-                    Console.Write($"{current} ");
+                    nodesPath += $"{current}\n";
                     stopwatch.Stop();
-                    Console.WriteLine();
-                    Console.WriteLine($"{(stopwatch.Elapsed.Minutes * 60000) + (stopwatch.Elapsed.Seconds * 1000) + stopwatch.Elapsed.Milliseconds}");
+                    File.AppendAllText(TimePath, GetTime(stopwatch));
+                    File.AppendAllText(OutputPath, nodesPath);
                     return true;
                 }
                 if (!visited.ContainsKey(current))
                 {
                     visited.Add(current, true);
-                    Console.Write($"{current} ");
+                    nodesPath += $"{current} ";
                 }
 
                 foreach (string vertice in Vertices[current])
@@ -112,8 +118,8 @@ namespace lab4
                 }
             }
             stopwatch.Stop();
-            Console.WriteLine();
-            Console.WriteLine($"{(stopwatch.Elapsed.Minutes * 60000) + (stopwatch.Elapsed.Seconds * 1000) + stopwatch.Elapsed.Milliseconds}");
+            File.AppendAllText(TimePath, GetTime(stopwatch));
+            File.AppendAllText(OutputPath, nodesPath);
             return false;
         }
     }
